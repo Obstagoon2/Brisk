@@ -5,6 +5,7 @@ A modern, responsive website for FRC Team 1912 built with HTML, CSS, and JavaScr
 ## Features
 
 - Modern and responsive design
+- Google Calendar integration to display upcoming events
 - Smooth scrolling animations
 - Interactive navigation
 - Parallax effects
@@ -16,72 +17,85 @@ A modern, responsive website for FRC Team 1912 built with HTML, CSS, and JavaScr
 ```
 1912website/
 ├── index.html          # Main HTML file
+├── about.html          # About page
+├── outreach.html       # Outreach page with Google Calendar
+├── ...
 ├── css/
 │   ├── style.css      # Main styles
-│   └── animations.css # Animation styles
+│   └── ...
 ├── js/
-│   └── main.js        # JavaScript functionality
-├── images/            # Image assets (create this directory)
+│   ├── main.js        # Main JavaScript functionality
+│   └── calendar.js    # Google Calendar integration
+├── assets/             # Image and video assets
 └── README.md         # Project documentation
 ```
 
-## Setup Instructions
+## Managing the Google Calendar
 
-1. Clone this repository
-2. Create an `images` directory and add your team's images
-3. Replace the placeholder content in `index.html` with your team's content
-4. Customize colors in `css/style.css` (look for the `:root` section)
-5. Test the website locally by opening `index.html` in a web browser
+The website displays events from a Google Calendar on the `outreach.html` page. The integration is managed by `js/calendar.js`.
 
-## Customization
+### How to Change the Calendar
 
-### Colors
-You can customize the color scheme by modifying the CSS variables in `css/style.css`:
-```css
-:root {
-    --primary-color: #1e88e5;
-    --secondary-color: #ff4081;
-    --dark-color: #1a1a1a;
-    --light-color: #ffffff;
-    --gray-color: #f5f5f5;
-}
+To change the calendar, you need to update two values in `js/calendar.js`:
+
+1.  `calendarId`: The ID of the Google Calendar to display.
+2.  `apiKey`: Your Google Cloud API key.
+
+```javascript
+// js/calendar.js
+
+const calendarId = 'YOUR_CALENDAR_ID@group.calendar.google.com';
+const apiKey = 'YOUR_GOOGLE_API_KEY';
 ```
 
-### Content Sections
-The website is organized into sections:
-- Home (Hero)
-- About
-- Team
-- Robots
-- Contact
+### Getting a Google Calendar ID
 
-Each section can be customized in `index.html` by modifying the content within the respective `<section>` tags.
+1.  Open [Google Calendar](https://calendar.google.com).
+2.  In the left sidebar, find the calendar you want to display.
+3.  Hover over the calendar, click the three vertical dots, and select "Settings and sharing".
+4.  Under the "Integrate calendar" section, you will find the **Calendar ID**. Copy this value.
 
-### Images
-1. Create an `images` directory
-2. Add your team photos, robot images, and a hero background image
-3. Update the image paths in the HTML and CSS files
+### Getting a Google API Key
 
-## Dependencies
+1.  Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2.  Create a new project (or select an existing one).
+3.  Enable the **Google Calendar API** for your project.
+    - Go to "APIs & Services" > "Enabled APIs & services".
+    - Click "+ ENABLE APIS AND SERVICES".
+    - Search for "Google Calendar API" and enable it.
+4.  Create an API key.
+    - Go to "APIs & Services" > "Credentials".
+    - Click "+ CREATE CREDENTIALS" and select "API key".
+    - Copy the generated API key.
+5.  **Important**: It is highly recommended to restrict your API key to prevent unauthorized use. You can restrict it to your website's domain (HTTP referrers).
 
-- [ScrollReveal](https://scrollrevealjs.org/) - For scroll animations
+### Making Your Calendar Public
 
-## Browser Support
+For the website to be able to read calendar events, the Google Calendar must be public.
 
-The website is compatible with modern browsers:
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+1.  In your Google Calendar's "Settings and sharing", go to the "Access permissions for events" section.
+2.  Check the box for "Make available to public".
+3.  Select "See only free/busy (hide details)" or "See all event details" depending on what you want to show.
 
-## Contributing
+## Diagnosing Calendar Issues
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+If the calendar events are not showing up on the outreach page, here are some things to check:
+
+-   **"Failed to load events" message**: This is the most common error. It usually means there is a problem with your `calendarId` or `apiKey` in `js/calendar.js`.
+-   **Check the Browser Console**: Open your browser's developer tools (usually by pressing F12) and check the Console tab for more detailed error messages from the Google Calendar API.
+-   **Is the Calendar Public?**: Double-check that your Google Calendar is set to public.
+-   **API Key Restrictions**: If you have restricted your API key, make sure the restrictions are configured correctly. For example, if you restricted it to a specific domain, it might not work when you are testing the website locally.
+
+## Customizing the Calendar Display
+
+You can change how many events are loaded at a time by modifying the `EVENTS_PER_BATCH` constant in `js/calendar.js`.
+
+```javascript
+// js/calendar.js
+
+const EVENTS_PER_BATCH = 6; // Change this number to show more or fewer events per batch
+```
 
 ## License
 
-This project is open source and available under the MIT License. 
+This project is open source and available under the MIT License.
